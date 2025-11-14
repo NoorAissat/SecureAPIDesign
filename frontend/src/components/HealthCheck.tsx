@@ -102,8 +102,10 @@ export const HealthCheck: React.FC = () => {
               <p>Status: {health.checks.memory.status}</p>
               {health.checks.memory.usage && (
                 <>
-                  <p>Heap Used: {health.checks.memory.usage.heapUsed}</p>
-                  <p>Heap Total: {health.checks.memory.usage.heapTotal}</p>
+                  <p>Heap Used: {health.checks.memory.usage.heapUsed} MB</p>
+                  <p>Heap Total: {health.checks.memory.usage.heapTotal} MB</p>
+                  <p>External Mem: {health.checks.memory.usage.external} MB</p>
+                  <p>RSS: {health.checks.memory.usage.rss} MB</p>
                 </>
               )}
             </div>

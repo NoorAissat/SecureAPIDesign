@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
+import { authenticate } from "./middleware/auth.js";
+import { requireRole } from "./middleware/requireRole.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import productRoutes from "./routes/products.js";
@@ -18,8 +20,8 @@ app.use(cors());
 app.use(express.json());
 app.use(rateLimiter);
 
-// *** Health (with timestamp & uptime) ***
-app.get("/health", async (_req, res) => {
+// *** Health (with timestamp & uptime) - Admin only ***
+app.get("/health", authenticate, requireRole("admin"), async (_req, res) => {
   const startTime = Date.now();
   const healthStatus = {
     status: "healthy",
