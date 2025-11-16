@@ -41,7 +41,11 @@ export const OrderList: React.FC = () => {
     try {
       const res = await productService.getProducts();
       setProducts(res.data.data || []);
-    } catch {
+    } catch (error: any){
+      if(error.customMessage){
+        setError(error.customMessage);
+        return;
+      }
       setError("Failed to fetch products.");
     }
   };

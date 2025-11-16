@@ -32,10 +32,17 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+
+    const onLoginPage = window.location.pathname === "/login";
+    if (error.response?.status === 401 && !onLoginPage) {
       localStorage.removeItem("authToken");
       window.location.href = "/login";
     }
+
+    if (error.response?.status == 429){
+      error.customMessage = error.response?.data?.error || "Too many requests";
+    }
+   
     console.error("API Error:", error.response?.data || error.message);
     return Promise.reject(error);
   }

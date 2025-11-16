@@ -101,8 +101,16 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 
-// Fallback
-app.use((res) => res.status(404).json({ error: "Not Found" }));
+// 404 Fallback
+app.use((req, res) => {
+  res.status(404).json({ error: "Not Found" });
+});
 
-const PORT = process.env.PORT || 3000;
+// Global error handler (must be last)
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Secure REST API running on port ${PORT}`));

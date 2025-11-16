@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Counter from "./Counter.js";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -11,11 +12,17 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Safe atomic increment
 orderSchema.pre("save", async function (next) {
-  if (!this.orderNumber) {
-    const count = await mongoose.model("Order").countDocuments();
-    this.orderNumber = `ORD-${String(count + 1).padStart(4, "0")}`;
-  }
+  if (!this.isNew) return next();
+
+  const counter = await Counter.findOneAndUpdate(
+    { id: "orderNumber" },            // which counter to increment
+    { $inc: { seq: 1 } },             // increment sequence
+    { new: true, upsert: true }       // create if not exists
+  );
+
+  this.orderNumber = `ORD-${String(counter.seq).padStart(4, "0")}`;
   next();
 });
 

@@ -32,9 +32,13 @@ export const Login = ({ onLoginSuccess } : LoginProps) => {
       if (!token) throw new Error("No token in response");
       localStorage.setItem("authToken", token);
       onLoginSuccess();
-    } catch (err) {
+    } catch (error: any) {
+      if (error.customMessage){
+        setError(error.customMessage);
+        return;
+      }
       setError("Invalid credentials. Please try again.");
-      console.error("Login error:", err);
+      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }

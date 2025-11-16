@@ -33,9 +33,13 @@ export const ProductList: React.FC = () => {
       const res = await productService.getProducts();
       setProducts(res.data.data || []);
       setError(null);
-    } catch {
-      setError("Failed to load products.");
-    } finally {
+    } catch(error: any){
+      if(error.customMessage){
+        setError(error.customMessage);
+        return;
+      }
+      setError("Failed to fetch products")
+    }finally {
       setLoading(false);
     }
   };
