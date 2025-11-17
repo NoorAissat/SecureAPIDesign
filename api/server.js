@@ -102,7 +102,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 
 // Fallback
-app.use((res) => res.status(404).json({ error: "Not Found" }));
+app.use((req, res) => res.status(404).json({ error: "Not Found" }));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Secure REST API running on port ${PORT}`));
