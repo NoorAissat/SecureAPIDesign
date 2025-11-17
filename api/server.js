@@ -47,6 +47,32 @@ app.use(cors({
 app.use(express.json());
 app.use(rateLimiter);
 
+// Security Headers Middleware
+app.use((req, res, next) => {
+  // Content Security Policy - Prevents XSS attacks by controlling resources the browser can load
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; base-uri 'self'; font-src 'self' https: data:; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' https: 'unsafe-inline'; upgrade-insecure-requests"
+  );
+
+  // X-Frame-Options - Prevents clickjacking attacks
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+
+  // X-Content-Type-Options - Prevents MIME type sniffing
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+
+  // Referrer-Policy - Controls how much referrer information is included with requests
+  res.setHeader('Referrer-Policy', 'no-referrer');
+
+  // Permissions-Policy - Controls which browser features can be used
+  res.setHeader(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+  );
+
+  next();
+});
+
 // Helper function to format uptime
 const formatUptime = (seconds) => {
   const days = Math.floor(seconds / 86400);
