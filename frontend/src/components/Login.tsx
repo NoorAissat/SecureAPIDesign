@@ -4,9 +4,10 @@ import "./Components.css";
 
 interface LoginProps {
   onLoginSuccess: () => void;
+  onSwitchToSignUp: () => void;
 }
 
-export const Login = ({ onLoginSuccess } : LoginProps) => {
+export const Login = ({ onLoginSuccess, onSwitchToSignUp } : LoginProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -76,6 +77,17 @@ export const Login = ({ onLoginSuccess } : LoginProps) => {
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
+
+        <div className="auth-switch">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            className="link-button"
+            onClick={onSwitchToSignUp}
+          >
+            Sign Up
+          </button>
+        </div>
       </form>
     </div>
   );
