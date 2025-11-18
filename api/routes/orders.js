@@ -18,7 +18,17 @@ router.get("/", authenticate, async (req, res) => {
     .populate('userId', 'username')
     .sort({ createdAt: -1 });
 
-  res.json({ data: orders, user: req.user });
+  // Transform orders to have separate userId and username fields
+  const transformedOrders = orders.map(order => {
+    const orderObj = order.toObject();
+    return {
+      ...orderObj,
+      username: orderObj.userId?.username,
+      userId: orderObj.userId?._id || orderObj.userId
+    };
+  });
+
+  res.json({ data: transformedOrders, user: req.user });
 });
 
 // POST /api/orders (auth)

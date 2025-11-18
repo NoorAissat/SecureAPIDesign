@@ -80,6 +80,7 @@ export interface Order {
   _id?: string;
   orderNumber?: string;
   userName?: string;
+  username?: string;  // Username from populated user
   userId?: string;
   productId: string;
   productName?: string;
