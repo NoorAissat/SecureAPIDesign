@@ -10,6 +10,9 @@ interface SignUpProps {
 export const SignUp = ({ onSignUpSuccess, onSwitchToLogin }: SignUpProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,7 +40,13 @@ export const SignUp = ({ onSignUpSuccess, onSwitchToLogin }: SignUpProps) => {
     setLoading(true);
 
     try {
-      await userService.createUser({ username, password });
+      await userService.createUser({
+        username,
+        password,
+        firstName,
+        lastName,
+        email,
+      });
       // Success - notify parent and show success state
       onSignUpSuccess();
     } catch (err: any) {
@@ -56,6 +65,42 @@ export const SignUp = ({ onSignUpSuccess, onSwitchToLogin }: SignUpProps) => {
     <div className="login-container">
       <h2>Sign Up</h2>
       <form onSubmit={handleSignUp} className="login-form">
+        <div className="form-input">
+          <label htmlFor="firstName">First Name:</label>
+          <input
+            id="firstname"
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="your first name"
+            required
+            minLength={3}
+          />
+        </div>
+        <div className="form-input">
+          <label htmlFor="lastName">Last Name:</label>
+          <input
+            id="lastName"
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="your last name here"
+            required
+            minLength={3}
+          />
+        </div>
+        <div className="form-input">
+          <label htmlFor="email">Email:</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Choose a username (min 3 characters)"
+            required
+            minLength={3}
+          />
+        </div>
         <div className="form-input">
           <label htmlFor="username">Username:</label>
           <input

@@ -62,7 +62,10 @@ export interface ApiResponse<T> {
 export interface User {
   _id?: string;
   username: string;
-  password?: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
   roles?: string[];
 }
 
@@ -79,7 +82,6 @@ export interface Product {
 export interface Order {
   _id?: string;
   orderNumber?: string;
-  userName?: string;
   username?: string;  // Username from populated user
   userId?: string;
   productId: string;
