@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { auditLogService, type AuditLog } from "../services/api";
 import RefreshButton from "./RefreshButton";
 import "./Components.css";
