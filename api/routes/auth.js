@@ -52,15 +52,15 @@ router.post(
       isEmailVerified: process.env.ENABLE_EMAIL_VERIFICATION !== "true", // if verification disabled, mark as verified
     });
 
-      // Log successful signup
-      await logAudit({
-        action: 'USER_SIGNUP',
-        req,
-        userId: user._id,
-        username: user.username,
-        details: { email, firstName, lastName },
-        statusCode: 201
-      });
+    // Log successful signup
+    await logAudit({
+      action: "USER_SIGNUP",
+      req,
+      userId: user._id,
+      username: user.username,
+      details: { email, firstName, lastName },
+      statusCode: 201,
+    });
     let emailSent = false;
 
     // Send verification email (if enabled)
@@ -131,7 +131,19 @@ router.post(
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
     const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(401).json({ error: "Invalid credentials" });
+    if (!ok) {
+      // Log failed login attempt
+      await logAudit({
+        action: "USER_LOGIN_FAILED",
+        req,
+        userId: user._id,
+        username: user.username,
+        success: false,
+        statusCode: 401,
+        errorMessage: "Invalid Password",
+      });
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
 
     // check if email is verified (only if verification is enabled)
     if (
@@ -150,6 +162,14 @@ router.post(
       { expiresIn: process.env.JWT_EXPIRES_IN || "1h" }
     );
 
+    // Log successful login
+    await logAudit({
+      action: "USER_LOGIN",
+      req,
+      userId: user._id,
+      username: user.username,
+      statusCode: 200,
+    });
     return res.json({ token });
   }
 );
